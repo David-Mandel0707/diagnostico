@@ -1,0 +1,23 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    padding: 10px 16px;
+    border: 1px solid black;
+}
+thead {
+    background-color: #ab182d;
+    color: white;
+}
+
+#grade {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;    
+}

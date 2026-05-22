@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+{% load static %}
+<head>
+<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+<div>
+  <h2>ATENÇÃO: Apenas planilhas segundo o modelo abaixo e no formato .xlsx ou .xls podem ser utilizadas pelo programa</h2>
+  <a href="https://docs.google.com/spreadsheets/d/11UL4dnlCwDi8LFaJRuI9ualZowwTNUeV_svZkGLJBrY/">Clique aqui para ver o modelo</a>
+</div>
+<br>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="planilha" accept=".xlsx, .xls"><br>
+    <button type="submit">Enviar</button>
+</form>
+
+{% if grupos_interesse %}
+<h1>Riscos da EJ: </h1>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto); gap: 20px;">
+  {% for chave, valores in grupos_interesse.items %}
+  <div>
+    <table>
+      <thead>
+        <tr><th>{{ chave }}</th></tr>
+      </thead>
+      <tbody>
+        {% for item in valores %}
+        <tr>
+          <td>{{ item }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
+
+{% endif %}
+
+<script>
+    const dados = JSON.parse('{{ dados|escapejs }}')
+</script>
+{% if dados %}
+<br>
+<h1>Buscar membro por nome: </h1>
+<form method="POST" action="{% url 'buscar_membro' %}">
+    {% csrf_token %}
+    <select name="membros"></select>
+    <button type="submit">Confirmar</button>
+</form>
+<br>
+<script>
+    const select = document.querySelector('select[name="membros"]');
+    dados.forEach(row => {
+    const option = document.createElement('option');
+    option.value = row.Membro;
+    option.text = row.Membro;
+    select.appendChild(option);
+    });
+</script>
+{% endif %}
+
+{% if dados_membro and not dados_membro.empty %}
+
+
+<table>
+  <thead>
+    <tr>
+      {% for campo in dados_membro.keys %}
+      <th>{{ campo }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for valor in dados_membro.values %}
+      <td>{{ valor }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+{% endif %}
+</body>
+
+</html>
